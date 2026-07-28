@@ -1,0 +1,14 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /raw/{uid}/{fileName} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /posters/{uid}/{fileName} {
+      allow read: if true; // final posters power public /p/[id] share pages
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
