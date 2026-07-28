@@ -85,8 +85,7 @@ export function PosterPrototype() {
     reader.readAsDataURL(file);
   }
 
-  const wordCount = sentence.trim() ? sentence.trim().split(/\s+/).length : 0;
-  const canGenerate = !!photoSrc && wordCount > 0 && wordCount <= 5;
+  const canGenerate = !!photoSrc && sentence.trim().length > 0;
 
   async function handleGenerate() {
     if (!photoSrc || !canGenerate) return;
@@ -167,7 +166,6 @@ export function PosterPrototype() {
             <CaptureCard
               photoSrc={photoSrc}
               sentence={sentence}
-              wordCount={wordCount}
               canGenerate={canGenerate}
               generating={step === "generating"}
               message={GENERATING_MESSAGES[messageIndex]}
@@ -563,7 +561,6 @@ function SectionLabel({ n, title }: { n: string; title: string }) {
 function CaptureCard({
   photoSrc,
   sentence,
-  wordCount,
   canGenerate,
   generating,
   message,
@@ -574,7 +571,6 @@ function CaptureCard({
 }: {
   photoSrc: string | null;
   sentence: string;
-  wordCount: number;
   canGenerate: boolean;
   generating: boolean;
   message: string;
@@ -639,7 +635,7 @@ function CaptureCard({
         <div className="flex flex-col">
           <SectionLabel n="EXHIBIT B" title="STATEMENT" />
           <p className="mb-4 text-sm" style={{ color: "var(--archive-ink-dim)" }}>
-            &ldquo;Today I began ______.&rdquo; Five words or fewer.
+            &ldquo;Today I began ______.&rdquo;
           </p>
 
           <div
@@ -664,28 +660,6 @@ function CaptureCard({
                 color: "var(--archive-amber-bright)",
               }}
             />
-            <div className="relative mt-4 flex gap-1.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span
-                  key={i}
-                  className="h-1.5 flex-1"
-                  style={{
-                    backgroundImage:
-                      i < wordCount
-                        ? wordCount > 5
-                          ? "none"
-                          : "var(--archive-gradient)"
-                        : "none",
-                    background:
-                      i < wordCount && wordCount > 5
-                        ? "var(--archive-stamp)"
-                        : i >= wordCount
-                          ? "rgba(255,255,255,0.12)"
-                          : undefined,
-                  }}
-                />
-              ))}
-            </div>
           </div>
 
           <button
